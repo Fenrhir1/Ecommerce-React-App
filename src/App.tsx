@@ -1,24 +1,23 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
 
 function App() {
+  const fibonacci = (n: number): number[] => {
+    const sequence: number[] = [0, 1];
+    for (let i = 2; i < n; i++) {
+      sequence.push(sequence[i - 1] + sequence[i - 2]);
+    }
+    return sequence;
+  };
+
+  const fibSequence = fibonacci(10); // Change the number to generate a different sequence
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <ul>
+        {fibSequence.map((num, index) => (
+          <li key={index}>{num}</li>
+        ))}
+      </ul>
     </div>
   );
 }
