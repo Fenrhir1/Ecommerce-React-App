@@ -15,7 +15,7 @@ function App() {
   const handleAddToCart = () => {
     setCartItems(cartItems + 1);
   };
-  
+
   function ProductList() {
     const [products, setProducts] = useState([]);
     const [cart, setCart] = useState([]);
@@ -31,7 +31,6 @@ function App() {
 
       getProducts();
     }, []);
-
 
     if (products)
       return (
@@ -55,7 +54,7 @@ function App() {
                 />
                 <p>Prezzo:{product.price}</p>
                 <p>Quantità:{product.qty}</p>
-                <button>Add to cart</button>
+                <button onClick={handleAddToCart}>Add to cart</button>
               </div>
             )
           )}
@@ -65,7 +64,6 @@ function App() {
   }
 
   return (
-
     <Paper
       elevation={0}
       sx={{
@@ -90,7 +88,7 @@ function App() {
         alignItems="center"
         sx={{ position: "relative", pr: 3 }}
       >
-        <Button onClick={handleAddToCart} sx={{ color: "gray" }}>
+        <Button sx={{ color: "gray" }}>
           <Badge badgeContent={cartItems} color="secondary">
             <ShoppingCartIcon
               sx={{
@@ -113,7 +111,6 @@ function App() {
         <ProductList />
       </Grid>
     </Paper>
-
   );
 }
 
