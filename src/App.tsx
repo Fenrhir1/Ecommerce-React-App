@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+
 import Typography from "@mui/material/Typography";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import Grid from "@mui/material/Grid";
@@ -14,6 +15,7 @@ function App() {
   const handleAddToCart = () => {
     setCartItems(cartItems + 1);
   };
+  
   function ProductList() {
     const [products, setProducts] = useState([]);
     const [cart, setCart] = useState([]);
@@ -29,6 +31,7 @@ function App() {
 
       getProducts();
     }, []);
+
 
     if (products)
       return (
@@ -62,6 +65,7 @@ function App() {
   }
 
   return (
+
     <Paper
       elevation={0}
       sx={{
@@ -109,6 +113,7 @@ function App() {
         <ProductList />
       </Grid>
     </Paper>
+
   );
 }
 
