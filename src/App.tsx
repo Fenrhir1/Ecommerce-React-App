@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-
 import Typography from "@mui/material/Typography";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import Grid from "@mui/material/Grid";
@@ -7,9 +6,11 @@ import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import Badge from "@mui/material/Badge";
 
+import logo from "./img/logo.png.jpg";
+
 function App() {
-  const title = "Amazzone";
-  const description = "Benvenuti nel mio negozio online. bla bla bla";
+  const description =
+    "Benvenuti nel negozio online ufficiale del quartiere più chic di Palermo";
   const [cartItems, setCartItems] = useState(0);
 
   const handleAddToCart = () => {
@@ -18,7 +19,6 @@ function App() {
 
   function ProductList() {
     const [products, setProducts] = useState([]);
-    const [cart, setCart] = useState([]);
 
     useEffect(() => {
       const getProducts = async () => {
@@ -34,7 +34,7 @@ function App() {
 
     if (products)
       return (
-        <ul>
+        <Grid container spacing={6}>
           {products.map(
             (product: {
               id: number;
@@ -44,21 +44,33 @@ function App() {
               image: string;
               qty: number;
             }) => (
-              <div key={product.id}>
-                <p>{product.title}</p>
-                <p>{product.description}</p>
-                <img
-                  style={{ width: "100px", height: "100px" }}
-                  src={product.image}
-                  alt={product.title}
-                />
-                <p>Prezzo:{product.price}</p>
-                <p>Quantità:{product.qty}</p>
-                <button onClick={handleAddToCart}>Add to cart</button>
-              </div>
+              <Grid item xs={10} sm={16} md={4} key={product.id}>
+                <Paper elevation={3} sx={{ padding: 2 }}>
+                  <Typography variant="h5">{product.title}</Typography>
+                  <Typography variant="h6">{product.description}</Typography>
+                  <img
+                    style={{ width: "100px", height: "100px" }}
+                    src={product.image}
+                    alt={product.title}
+                  />
+                  <Typography variant="body1">
+                    Prezzo: {product.price}
+                  </Typography>
+                  <Typography variant="body1">
+                    Quantità: {product.qty}
+                  </Typography>
+                  <Button
+                    onClick={handleAddToCart}
+                    variant="contained"
+                    color="primary"
+                  >
+                    Add to cart
+                  </Button>
+                </Paper>
+              </Grid>
             )
           )}
-        </ul>
+        </Grid>
       );
     else return <p>Loading...</p>;
   }
@@ -69,18 +81,23 @@ function App() {
       sx={{
         backgroundColor: "black",
         minHeight: "100vh",
-        color: "#008080",
+        color: "white",
         padding: "20px",
       }}
     >
+      <Grid container justifyContent="center" alignItems="center">
+        <img
+          src={logo}
+          alt="Amazzone Logo"
+          style={{ width: "200px", height: "100px" }}
+        />{" "}
+      </Grid>
       <Grid container justifyContent="center">
         <Typography
           variant="h5"
           component="h1"
           sx={{ textAlign: "center", mb: 2 }}
-        >
-          {title}
-        </Typography>
+        ></Typography>
       </Grid>
       <Grid
         container
@@ -103,7 +120,11 @@ function App() {
         </Button>
       </Grid>
       <Grid container justifyContent="center">
-        <Typography variant="body1" sx={{ textAlign: "center", mt: 2 }}>
+        <Typography
+          variant="body1"
+          color="-moz-initial"
+          sx={{ textAlign: "center", mt: 2, mb: 10 }}
+        >
           {description}
         </Typography>
       </Grid>
