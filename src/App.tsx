@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Typography from "@mui/material/Typography";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import Grid from "@mui/material/Grid";
@@ -7,73 +7,36 @@ import Button from "@mui/material/Button";
 import Badge from "@mui/material/Badge";
 
 import logo from "./img/logo.png.jpg";
+import { ProductList } from "./Product";
 
 function App() {
   const description =
     "Benvenuti nel negozio online ufficiale del quartiere più chic di Palermo";
-  const [cartItems, setCartItems] = useState(0);
 
-  const handleAddToCart = () => {
-    setCartItems(cartItems + 1);
+  const [products, setProducts] = useState([] as any);
+  const [cartItems, setCartItems] = useState<Array<{}>>([]);
+  const [showCart, setShowCart] = useState(false);
+
+  const handleAddToCart = (product: any) => {
+    const existingItem = cartItems.find((item: any) => item.id === product.id);
+    if (existingItem) {
+      const updatedCartItems = cartItems.map((item: any) =>
+        item.id === product.id ? { ...item, qty: item.qty + 1 } : item
+      );
+      setCartItems(updatedCartItems);
+    } else {
+      setCartItems([...cartItems, { ...product, qty: 1 }]);
+    }
   };
 
-  function ProductList() {
-    const [products, setProducts] = useState([]);
+  const handleShowCart = () => {
+    setShowCart(!showCart);
+  };
 
-    useEffect(() => {
-      const getProducts = async () => {
-        const response = await fetch(
-          "https://mockend.up.railway.app/api/products"
-        );
-        const data = await response.json();
-        setProducts(data);
-      };
-
-      getProducts();
-    }, []);
-
-    if (products)
-      return (
-        <Grid container spacing={6}>
-          {products.map(
-            (product: {
-              id: number;
-              description: string;
-              title: string;
-              price: number;
-              image: string;
-              qty: number;
-            }) => (
-              <Grid item xs={10} sm={16} md={4} key={product.id}>
-                <Paper elevation={3} sx={{ padding: 2 }}>
-                  <Typography variant="h5">{product.title}</Typography>
-                  <Typography variant="h6">{product.description}</Typography>
-                  <img
-                    style={{ width: "100px", height: "100px" }}
-                    src={product.image}
-                    alt={product.title}
-                  />
-                  <Typography variant="body1">
-                    Prezzo: {product.price}
-                  </Typography>
-                  <Typography variant="body1">
-                    Quantità: {product.qty}
-                  </Typography>
-                  <Button
-                    onClick={handleAddToCart}
-                    variant="contained"
-                    color="primary"
-                  >
-                    Add to cart
-                  </Button>
-                </Paper>
-              </Grid>
-            )
-          )}
-        </Grid>
-      );
-    else return <p>Loading...</p>;
-  }
+  const handleRemoveFromCart = (product: any) => {
+    const newCartItems = cartItems.filter((item: any) => item !== product);
+    setCartItems(newCartItems);
+  };
 
   return (
     <Paper
@@ -105,8 +68,8 @@ function App() {
         alignItems="center"
         sx={{ position: "relative", pr: 3 }}
       >
-        <Button sx={{ color: "gray" }}>
-          <Badge badgeContent={cartItems} color="secondary">
+        <Button sx={{ color: "gray" }} onClick={handleShowCart}>
+          <Badge badgeContent={cartItems.length} color="secondary">
             <ShoppingCartIcon
               sx={{
                 fontSize: 36,
@@ -128,9 +91,57 @@ function App() {
           {description}
         </Typography>
       </Grid>
-      <Grid>
-        <ProductList />
-      </Grid>
+
+      {showCart ? (
+        <Grid>
+          <Typography variant="h4" sx={{ textAlign: "center" }}>
+            Carrello
+          </Typography>
+          <Typography variant="h6" sx={{ textAlign: "center" }}>
+            Prezzo Totale =
+            {cartItems.reduce(
+              (acc: any, product: any) => acc + product.price,
+              0
+            )}
+            €
+          </Typography>
+          <Grid container spacing={6}>
+            {cartItems.map((product: any, index: number) => (
+              <Grid item xs={10} sm={16} md={4} key={product.id}>
+                <Paper elevation={3} sx={{ padding: 2 }}>
+                  <Typography variant="h5">{product.title}</Typography>
+                  <Typography variant="h6">{product.description}</Typography>
+                  <img
+                    style={{ width: "100px", height: "100px" }}
+                    src={product.image}
+                    alt={product.title}
+                  />
+                  <Typography variant="body1">
+                    Prezzo: {product.price}
+                  </Typography>
+                  <Typography variant="body1">
+                    Quantità: {product.qty}
+                  </Typography>
+                  <Button
+                    onClick={() => handleRemoveFromCart(product)}
+                    color="primary"
+                  >
+                    Remove from cart
+                  </Button>
+                </Paper>
+              </Grid>
+            ))}
+          </Grid>
+        </Grid>
+      ) : (
+        <Grid>
+          <ProductList
+            products={products}
+            setProducts={setProducts}
+            handleAddToCart={handleAddToCart}
+          />
+        </Grid>
+      )}
     </Paper>
   );
 }
