@@ -33,8 +33,22 @@ export const ContextAppProvider = ({ children }: Props) => {
         item.id === product.id ? { ...item, qty: item.qty + 1 } : item
       );
       setCartItems(updatedCartItems);
+      const updatedProductsQty = products.map((item) => {
+        if (item.id === product.id) {
+          return { ...item, qty: item.qty - 1 };
+        }
+        return item;
+      });
+      setProducts(updatedProductsQty);
     } else {
       setCartItems([...cartItems, { ...product, qty: 1 }]);
+      const updatedProductsQty = products.map((item) => {
+        if (item.id === product.id) {
+          return { ...item, qty: item.qty - 1 };
+        }
+        return item;
+      });
+      setProducts(updatedProductsQty);
     }
   };
 
